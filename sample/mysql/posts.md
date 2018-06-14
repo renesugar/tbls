@@ -3,6 +3,27 @@
 ## Description
 
 Posts table
+<details>
+<summary><strong>Table Definition</strong></summary>
+
+```sql
+CREATE TABLE `posts` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `title` varchar(255) NOT NULL,
+  `body` text NOT NULL,
+  `post_type` enum('public','private','draft') NOT NULL COMMENT 'public/private/draft',
+  `created` datetime NOT NULL,
+  `updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`,`title`),
+  KEY `posts_user_id_idx` (`id`) USING BTREE,
+  CONSTRAINT `posts_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='Posts table'
+```
+
+</details>
+
 
 ## Columns
 
@@ -11,14 +32,14 @@ Posts table
 | id | bigint(20) |  | false | [comments](comments.md) [logs](logs.md)  |  |  |
 | user_id | int(11) |  | false |  | [users](users.md)  |  |
 | title | varchar(255) |  | false |  |  |  |
-| body | text |  | false |  |  |  |
+| body | text |  | false |  |  | post body |
 | post_type | enum('public','private','draft') |  | false |  |  | public/private/draft |
 | created | datetime |  | false |  |  |  |
 | updated | datetime |  | true |  |  |  |
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 | posts_user_id_fk | FOREIGN KEY | FOREIGN KEY (user_id) REFERENCES users (id) |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
@@ -26,7 +47,7 @@ Posts table
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 | posts_user_id_idx | KEY posts_user_id_idx (id) USING BTREE |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |

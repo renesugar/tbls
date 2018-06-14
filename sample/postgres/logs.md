@@ -2,7 +2,7 @@
 
 ## Description
 
-
+audit log table
 
 ## Columns
 
@@ -18,12 +18,12 @@
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 
 ## Relations

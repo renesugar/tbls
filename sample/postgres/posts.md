@@ -11,7 +11,7 @@ Posts table
 | id | bigint | nextval('posts_id_seq'::regclass) | false | [comments](comments.md) [logs](logs.md)  |  |  |
 | user_id | integer |  | false |  | [users](users.md)  |  |
 | title | varchar(255) |  | false |  |  |  |
-| body | text |  | false |  |  |  |
+| body | text |  | false |  |  | post body |
 | post_type | post_types |  | false |  |  | public/private/draft |
 | labels | array |  | true |  |  |  |
 | created | timestamp without time zone |  | false |  |  |  |
@@ -19,7 +19,7 @@ Posts table
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 | posts_id_pk | PRIMARY KEY | PRIMARY KEY (id) |
 | posts_user_id_title_key | UNIQUE | UNIQUE (user_id, title) |
@@ -27,7 +27,7 @@ Posts table
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 | posts_id_pk | CREATE UNIQUE INDEX posts_id_pk ON public.posts USING btree (id) |
 | posts_user_id_title_key | CREATE UNIQUE INDEX posts_user_id_title_key ON public.posts USING btree (user_id, title) |

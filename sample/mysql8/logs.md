@@ -2,6 +2,24 @@
 
 ## Description
 
+audit log table
+<details>
+<summary><strong>Table Definition</strong></summary>
+
+```sql
+CREATE TABLE `logs` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `post_id` bigint(20) DEFAULT NULL,
+  `comment_id` bigint(20) DEFAULT NULL,
+  `comment_star_id` bigint(20) DEFAULT NULL,
+  `payload` text,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
+
+</details>
 
 
 ## Columns
@@ -18,13 +36,13 @@
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
 

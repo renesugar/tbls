@@ -3,6 +3,19 @@
 ## Description
 
 
+<details>
+<summary><strong>Table Definition</strong></summary>
+
+```sql
+CREATE TABLE `CamelizeTable` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `created` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+```
+
+</details>
+
 
 ## Columns
 
@@ -13,13 +26,13 @@
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 | PRIMARY | PRIMARY KEY | PRIMARY KEY (id) |
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 | PRIMARY | PRIMARY KEY (id) USING BTREE |
 

@@ -41,6 +41,7 @@ type Table struct {
 	Columns     []*Column
 	Indexes     []*Index
 	Constraints []*Constraint
+	Def         string
 }
 
 // Relation is the struct for table relation
@@ -63,6 +64,7 @@ type Schema struct {
 // AdditionalData is the struct for table relations from yaml
 type AdditionalData struct {
 	Relations []AdditionalRelation `yaml:"relations"`
+	Comments  []AdditionalComment  `yaml:"comments"`
 }
 
 // AdditionalRelation is the struct for table relation from yaml
@@ -72,6 +74,13 @@ type AdditionalRelation struct {
 	ParentTable   string   `yaml:"parentTable"`
 	ParentColumns []string `yaml:"parentColumns"`
 	Def           string   `yaml:"def"`
+}
+
+// AdditionalComment is the struct for table relation from yaml
+type AdditionalComment struct {
+	Table          string            `yaml:"table"`
+	TableComment   string            `yaml:"tableComment"`
+	ColumnComments map[string]string `yaml:"columnComments"`
 }
 
 // FindTableByName find table by table name
@@ -124,8 +133,8 @@ func (s *Schema) Sort() error {
 	return nil
 }
 
-// LoadAdditionalRelations load additional relations from yaml file
-func (s *Schema) LoadAdditionalRelations(path string) error {
+// LoadAdditionalData load additional data (relations, comments) from yaml file
+func (s *Schema) LoadAdditionalData(path string) error {
 	fullPath, err := filepath.Abs(path)
 	if err != nil {
 		return err
@@ -136,13 +145,36 @@ func (s *Schema) LoadAdditionalRelations(path string) error {
 		return err
 	}
 
-	var data AdditionalData
-	err = yaml.Unmarshal(buf, &data)
+	err = s.AddAdditionalData(buf)
 	if err != nil {
 		return err
 	}
 
-	for _, r := range data.Relations {
+	return nil
+}
+
+// AddAdditionalData add additional data (relations, comments) from yaml buffer
+func (s *Schema) AddAdditionalData(buf []byte) error {
+	var data AdditionalData
+	err := yaml.Unmarshal(buf, &data)
+	if err != nil {
+		return err
+	}
+
+	err = addAdditionalRelations(s, data.Relations)
+	if err != nil {
+		return err
+	}
+	err = addAdditionalComments(s, data.Comments)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func addAdditionalRelations(s *Schema, relations []AdditionalRelation) error {
+	for _, r := range relations {
 		relation := &Relation{
 			IsAdditional: true,
 		}
@@ -151,6 +183,7 @@ func (s *Schema) LoadAdditionalRelations(path string) error {
 		} else {
 			relation.Def = "Additional Relation"
 		}
+		var err error
 		relation.Table, err = s.FindTableByName(r.Table)
 		if err != nil {
 			return err
@@ -178,6 +211,25 @@ func (s *Schema) LoadAdditionalRelations(path string) error {
 
 		s.Relations = append(s.Relations, relation)
 	}
+	return nil
+}
 
+func addAdditionalComments(s *Schema, comments []AdditionalComment) error {
+	for _, c := range comments {
+		table, err := s.FindTableByName(c.Table)
+		if err != nil {
+			return err
+		}
+		if c.TableComment != "" {
+			table.Comment = c.TableComment
+		}
+		for c, comment := range c.ColumnComments {
+			column, err := table.FindColumnByName(c)
+			if err != nil {
+				return err
+			}
+			column.Comment = comment
+		}
+	}
 	return nil
 }

@@ -2,7 +2,17 @@
 
 ## Description
 
-{{ .Table.Comment }}
+{{ .Table.Comment -}}
+{{ if .Table.Def }}
+<details>
+<summary><strong>Table Definition</strong></summary>
+
+```sql
+{{ .Table.Def }}
+```
+
+</details>
+{{ end }}
 
 ## Columns
 
@@ -14,7 +24,7 @@
 
 ## Constraints
 
-| Name | Type | Def |
+| Name | Type | Definition |
 | ---- | ---- | --- |
 {{- range $i, $c := .Table.Constraints }}
 | {{ $c.Name }} | {{ $c.Type }} | {{ $c.Def }} |
@@ -22,7 +32,7 @@
 
 ## Indexes
 
-| Name | Def |
+| Name | Definition |
 | ---- | --- |
 {{- range $i, $idx := .Table.Indexes }}
 | {{ $idx.Name }} | {{ $idx.Def }} |

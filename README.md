@@ -59,10 +59,10 @@ $ tbls diff postgres://user:pass@hostname:5432/dbname ./dbdoc
 1. Commit document using `tbls doc`.
 2. Check document updates using `tbls diff`
 
-Set following code to [`your-ci-config.yml`](.travis.yml).
+Set following code to [`your-ci-config.yml`](https://github.com/k1LoW/tbls/blob/ffad9d7463bb22baa236c7b673fd679f1850f37d/.travis.yml#L19).
 
 ```sh
-DIFF=`tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc` && if [ ! -z "$DIFF" ]; then echo "document does not match database." >&2 ; echo tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc; exit 1; fi
+DIFF=`tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc` && if [ ! -z "$DIFF" ]; then echo "document does not match database." >&2 ; tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc; exit 1; fi
 ```
 
 Makefile sample is following
@@ -73,23 +73,29 @@ doc: ## Document database schema
 
 testdoc: ## Test database schema document
 	$(eval DIFF := $(shell tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc))
-	@test -z "$(DIFF)" || (echo "document does not match database." && postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc && exit 1)
+	@test -z "$(DIFF)" || (echo "document does not match database." && tbls diff postgres://user:pass@localhost:5432/testdb?sslmode=disable ./dbdoc && exit 1)
 ```
 
 **Tips:** If the order of the columns does not match, you can use the `--sort` option.
 
-## Add additional data (relations) to schema
+## Add additional data (relations, comments) to schema
 
-To add additional to the schema, specify [the yaml file](test/relations.yml) with the `--add` option as follows
+To add additional data to the schema, specify [the yaml file](test/additional_data.yml) with the `--add` option as follows
 
 ``` console
-$ tbls diff mysql://user:pass@hostname:3306/dbname --add test/relations.yml ./dbdoc
+$ tbls diff mysql://user:pass@hostname:3306/dbname --add path/to/additional_data.yml ./dbdoc
 ```
 
 ## Installation
 
 ```console
 $ go get github.com/k1LoW/tbls
+```
+
+or
+
+```console
+$ brew install k1LoW/tbls/tbls
 ```
 
 ## Database Support
